@@ -36,9 +36,7 @@ namespace s9 {
 		void processEvent(ResizeEvent e);
 		
 	protected:
-		gl::Quad mTestQuad;
-		gl::Shader mShader;
-		InertiaCam mCamera;
+	
 		
 	};
 }

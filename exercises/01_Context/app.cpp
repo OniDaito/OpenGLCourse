@@ -37,12 +37,12 @@ void BasicApp::display(double_t dt){
     
 }
 
-
 /*
  * This is called by the wrapper function when an event is fired
  */
 
 void BasicApp::processEvent(MouseEvent e){
+
 }
 
 /*
@@ -88,7 +88,7 @@ int main (int argc, const char * argv[]) {
 
     // Launch our isntance of GLFW, sending the major and minor numbers
 
-    GLFWApp a(b, 800, 600, false, argc, argv, "Basic", 3, 2);
+    GLFWApp a(b, 800, 600, false, argc, argv, "01_Context", 3, 2);
 
     return EXIT_SUCCESS;
 

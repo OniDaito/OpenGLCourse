@@ -148,7 +148,6 @@ if (_OPENGLCOURSE_LINUX)
  
   OPENGLCOURSE_find_library(glfw3)
   OPENGLCOURSE_find_library(AntTweakBar)
-  OPENGLCOURSE_find_library(assimp)
 
   include_directories(${PROJECT_SOURCE_DIR}/lib/linux
     ${OPENGLCOURSE_INCLUDES}
@@ -187,7 +186,6 @@ elseif(_OPENGLCOURSE_OSX)
 
   OPENGLCOURSE_find_library(glfw3)
   OPENGLCOURSE_find_library(AntTweakBar)
-  OPENGLCOURSE_find_library(AssImp)
 
 elseif(_OPENGLCOURSE_WIN32)
   
