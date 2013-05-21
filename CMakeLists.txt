@@ -1,20 +1,20 @@
 #####################################################################
-# Main CMake file for the Seburo Project
+# Main CMake file for the OpenGLCourse Project
 
 cmake_minimum_required (VERSION 2.8) 
-project (Seburo) 
+project (OpenGLCourse) 
 
-set(SEBURO_VERSION_MAJOR "0")
-set(SEBURO_VERSION_MINOR "2")
-set(SEBURO_VERSION_PATCH "0")
-set(SEBURO_VERSION_EXTRA "")
-set(SEBURO_VERSION "${SEBURO_VERSION_MAJOR}.${SEBURO_VERSION_MINOR}")
-set(SEBURO_VERSION_FULL "${SEBURO_VERSION}.${SEBURO_VERSION_PATCH}${SEBURO_VERSION_EXTRA}")
+set(OPENGLCOURSE_VERSION_MAJOR "0")
+set(OPENGLCOURSE_VERSION_MINOR "2")
+set(OPENGLCOURSE_VERSION_PATCH "0")
+set(OPENGLCOURSE_VERSION_EXTRA "")
+set(OPENGLCOURSE_VERSION "${OPENGLCOURSE_VERSION_MAJOR}.${OPENGLCOURSE_VERSION_MINOR}")
+set(OPENGLCOURSE_VERSION_FULL "${OPENGLCOURSE_VERSION}.${OPENGLCOURSE_VERSION_PATCH}${OPENGLCOURSE_VERSION_EXTRA}")
 
 #####################################################################
 # Options
 
-option(SEBURO_BUILD_EXAMPLES "Build the Seburo example programs" ON)
+option(OPENGLCOURSE_BUILD_EXAMPLES "Build the OpenGLCourse example programs" ON)
 
 #####################################################################
 # Detect OS and Basic Compiler settings
@@ -23,10 +23,10 @@ option(SEBURO_BUILD_EXAMPLES "Build the Seburo example programs" ON)
 # Need to test for 64 bit Linux. OSX is 64 bit non universal by default
 
 if (WIN32)
-    set(_SEBURO_WIN32 1)
-    message(STATUS "Building SEBURO Shared on a Win32 system") 
-    add_definitions(-D_SEBURO_WIN32)
-    add_definitions(-D_SEBURO_BUILD_DLL)
+    set(_OPENGLCOURSE_WIN32 1)
+    message(STATUS "Building OPENGLCOURSE Shared on a Win32 system") 
+    add_definitions(-D_OPENGLCOURSE_WIN32)
+    add_definitions(-D_OPENGLCOURSE_BUILD_DLL)
     SET(CMAKE_CXX_FLAGS "/EHsc")
     FILE(GLOB OSSources src/win32/*)
     #SET(CMAKE_MODULE_LINKER_FLAGS "/NODEFAULTLIB")
@@ -36,15 +36,15 @@ if (WIN32)
     #CMAKE_MODULE_LINKER_FLAGS
  
 elseif (UNIX AND APPLE)
-    set(_SEBURO_OSX 1)
-    add_definitions(-D_SEBURO_OSX)
-    message(STATUS "Building SEBURO Shared on Mac OS X")
+    set(_OPENGLCOURSE_OSX 1)
+    add_definitions(-D_OPENGLCOURSE_OSX)
+    message(STATUS "Building OPENGLCOURSE Shared on Mac OS X")
     FILE(GLOB OSSources src/osx/*)
 
 elseif (UNIX AND NOT APPLE)
-    set(_SEBURO_LINUX 1)
-    add_definitions(-D_SEBURO_LINUX)
-    message(STATUS "Building SEBURO Shared on a Unix-like system")
+    set(_OPENGLCOURSE_LINUX 1)
+    add_definitions(-D_OPENGLCOURSE_LINUX)
+    message(STATUS "Building OPENGLCOURSE Shared on a Unix-like system")
     FILE(GLOB OSSources src/linux/*)
 else()
     message(FATAL_ERROR "No supported platform was detected")
@@ -57,8 +57,8 @@ endif()
 option(DEBUG "Debug Mode" ON)
 if(DEBUG)
   add_definitions(-DDEBUG)  
-  set(_SEBURO_DEBUG 1)
-  if (_SEBURO_OSX OR _SEBURO_LINUX)
+  set(_OPENGLCOURSE_DEBUG 1)
+  if (_OPENGLCOURSE_OSX OR _OPENGLCOURSE_LINUX)
     SET(CMAKE_CXX_FLAGS_DEBUG "-g")
   else()
 
@@ -84,7 +84,7 @@ FILE(GLOB GLUtils src/gl/utils/*)
 #####################################################################
 # Macro to find libraries in the local lib directory then system wide
 
-macro(SEBURO_find_library libname)
+macro(OPENGLCOURSE_find_library libname)
   string(TOLOWER ${libname} libnamelow)
 
   find_library(${libname}_LIB NAMES ${libname} PATHS ${LOCAL_LIBRARIES_SEARCH_PATHS} NO_DEFAULT_PATH)
@@ -96,7 +96,7 @@ macro(SEBURO_find_library libname)
     message(FATAL_ERROR "Cannot find '${libname}' library")
   else()
     message(STATUS "Found '${libname}' library in ${${libname}_LIB}")
-    set(SEBURO_LIBRARIES ${SEBURO_LIBRARIES} ${${libname}_LIB})
+    set(OPENGLCOURSE_LIBRARIES ${OPENGLCOURSE_LIBRARIES} ${${libname}_LIB})
   endif()
 endmacro()
 
@@ -105,7 +105,7 @@ endmacro()
 #####################################################################
 # Extra Libraries and their paths
 
-if (_SEBURO_LINUX)
+if (_OPENGLCOURSE_LINUX)
 
   set (CMAKE_FIND_LIBRARY_PREFIXES "lib" "")
   set (CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
@@ -129,32 +129,32 @@ if (_SEBURO_LINUX)
 
 
   # Setup pkgconfig macro for including extra things
-  macro(SEBURO_find_pkgconfig_lib pkgname)
+  macro(OPENGLCOURSE_find_pkgconfig_lib pkgname)
     include(FindPkgConfig)
     pkg_check_modules(${pkgname}_pkg REQUIRED ${pkgname})
     if ( DEFINED ${pkgname}_pkg_FOUND )
-      set (SEBURO_LIBRARIES ${SEBURO_LIBRARIES} ${${pkgname}_pkg_LIBRARIES}
+      set (OPENGLCOURSE_LIBRARIES ${OPENGLCOURSE_LIBRARIES} ${${pkgname}_pkg_LIBRARIES}
                                     ${${pkgname}_pkg_LDFLAGS} ${${pkgname}_pkg_LDFLAGS_OTHER})
-      set (SEBURO_INCLUDES ${SEBURO_INCLUDES} ${${pkgname}_pkg_INCLUDE_DIRS})
-      set (SEBURO_CXX_FLAGS ${SEBURO_CXX_FLAGS} ${${pkgname}_pkg_CFLAGS})
+      set (OPENGLCOURSE_INCLUDES ${OPENGLCOURSE_INCLUDES} ${${pkgname}_pkg_INCLUDE_DIRS})
+      set (OPENGLCOURSE_CXX_FLAGS ${OPENGLCOURSE_CXX_FLAGS} ${${pkgname}_pkg_CFLAGS})
     else()
       message( FATAL_ERROR "Cannot find pkgconfig file for ${pkgconfig}. Check your PKG_CONFIG_PATH environment variable.")
     endif()
-  endmacro(SEBURO_find_pkgconfig_lib)
+  endmacro(OPENGLCOURSE_find_pkgconfig_lib)
 
-  SEBURO_find_pkgconfig_lib(gtkmm-3.0)
-  SEBURO_find_pkgconfig_lib(gl)
-  SEBURO_find_pkgconfig_lib(xxf86vm)
+  OPENGLCOURSE_find_pkgconfig_lib(gtkmm-3.0)
+  OPENGLCOURSE_find_pkgconfig_lib(gl)
+  OPENGLCOURSE_find_pkgconfig_lib(xxf86vm)
  
-  SEBURO_find_library(glfw3)
-  SEBURO_find_library(AntTweakBar)
-  SEBURO_find_library(assimp)
+  OPENGLCOURSE_find_library(glfw3)
+  OPENGLCOURSE_find_library(AntTweakBar)
+  OPENGLCOURSE_find_library(assimp)
 
   include_directories(${PROJECT_SOURCE_DIR}/lib/linux
-    ${SEBURO_INCLUDES}
+    ${OPENGLCOURSE_INCLUDES}
   )
 
-elseif(_SEBURO_OSX)
+elseif(_OPENGLCOURSE_OSX)
 
   link_directories(${PROJECT_SOURCE_DIR}/lib/osx)
 
@@ -185,11 +185,11 @@ elseif(_SEBURO_OSX)
     ${CMAKE_SOURCE_DIR}/lib/osx
     CACHE STRING "Local Library search paths")
 
-  SEBURO_find_library(glfw3)
-  SEBURO_find_library(AntTweakBar)
-  SEBURO_find_library(AssImp)
+  OPENGLCOURSE_find_library(glfw3)
+  OPENGLCOURSE_find_library(AntTweakBar)
+  OPENGLCOURSE_find_library(AssImp)
 
-elseif(_SEBURO_WIN32)
+elseif(_OPENGLCOURSE_WIN32)
   
   if (DEBUG)
     link_directories(${PROJECT_SOURCE_DIR}/lib/win32/Debug)
@@ -205,10 +205,8 @@ elseif(_SEBURO_WIN32)
 
   find_package(OpenGL REQUIRED)
 
-  SEBURO_find_library(glfw3) # Built from the github version 3 build
-  SEBURO_find_library(AntTweakBar)
-  #SEBURO_find_library(AssImp)
-  #SEBURO_find_library(glew32)
+  OPENGLCOURSE_find_library(glfw3) # Built from the github version 3 build
+  OPENGLCOURSE_find_library(AntTweakBar)
 
 else()
   message(FATAL_ERROR "No supported platform was detected")
@@ -250,36 +248,12 @@ FILE(GLOB CommonSources src/*)
 list(REMOVE_ITEM GLUtils ${PROJECT_SOURCE_DIR}/src/gl/utils/glewinfo.c)
 list(REMOVE_ITEM GLUtils ${PROJECT_SOURCE_DIR}/src/gl/utils/visualinfo.c)
 
-#####################################################################
-# OpenCV.
-
-option(USEOPENCV "useopencv" OFF)
-
-if (USEOPENCV)
-  add_definitions(-D_SEBURO_OPENCV)
-  SEBURO_find_library(opencv_calib3d)
-  SEBURO_find_library(opencv_contrib)
-  SEBURO_find_library(opencv_core)
-  SEBURO_find_library(opencv_features2d)
-  SEBURO_find_library(opencv_gpu)
-#  SEBURO_find_library(opencv_highgui)
-  SEBURO_find_library(opencv_imgproc)
-  SEBURO_find_library(opencv_legacy)
-  SEBURO_find_library(opencv_ml)
-  SEBURO_find_library(opencv_objdetect)
-#  SEBURO_find_library(opencv_stitching)
-#  SEBURO_find_library(opencv_ts)
-  SEBURO_find_library(opencv_video)
-
-else()
-  list(REMOVE_ITEM CommonSources src/cvprocess.cpp)
-endif(USEOPENCV)
 
 #####################################################################
 # Create Target
 
 # Final removals for Win32 until we add fixes
-if (_SEBURO_WIN32)
+if (_OPENGLCOURSE_WIN32)
   #list(REMOVE_ITEM GLSources ${PROJECT_SOURCE_DIR}/src/gl/glew.c)
  
 
@@ -300,18 +274,17 @@ if (_SEBURO_WIN32)
 
 endif()
 
-
-add_library(Seburo SHARED
+add_library(OpenGLCourse SHARED
   ${CommonSources}
   ${GLSources}
   ${GLUtils}
   ${OSSources}
 ) 
 
-# Now link the found libraries to the SEBURO library
+# Now link the found libraries to the OPENGLCOURSE library
 
-target_link_libraries(Seburo 
-  ${SEBURO_LIBRARIES}
+target_link_libraries(OpenGLCourse 
+  ${OPENGLCOURSE_LIBRARIES}
   ${OPENGL_LIBRARY}
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
@@ -324,7 +297,7 @@ target_link_libraries(Seburo
 # seperate libs depending on OS
 
 if (UNIX AND APPLE)
-  target_link_libraries(Seburo 
+  target_link_libraries(OpenGLCourse 
     ${OSX_FRAMEWORKS}
   )
 endif()
@@ -337,25 +310,62 @@ project(${PROJECT_NAME})
 
 #option(MULTIWINDOW "Multiple Window Support" OFF)
 
-#####################################################################
-# Go into examples directory and build these
 
-if (SEBURO_BUILD_EXAMPLES) 
-  if (NOT TARGET examples) 
-    FILE(GLOB examples examples/*)
-    foreach(example ${examples})
-      add_subdirectory(${example})
+##########################################################
+# Define a bundling Macro for OSX only
+
+if (_OPENGLCOURSE_OSX)
+
+  macro(OPENGLCOURSE_bundler)
+    add_executable(${PROJECT_NAME} MACOSX_BUNDLE app.cpp)
+    
+    SET(MACOSX_BUNDLE_ICON_FILE ${CMAKE_SOURCE_DIR}/s9.icns) 
+    SET_SOURCE_FILES_PROPERTIES(${CMAKE_SOURCE_DIR}/s9.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+    set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
+
+    set(DIRS ${CMAKE_SOURCE_DIR}/lib/osx
+      ${CMAKE_SOURCE_DIR}/data
+      ${CMAKE_SOURCE_DIR}/shaders/3
+    ) 
+
+    set(MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME}")
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER "uk.co.section9.openglcourse.${PROJECT_NAME}")
+    set(MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME}")
+    set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
+    set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${VTK_VERSION})
+    set(MACOSX_BUNDLE_BUNDLE_VERSION ${VTK_VERSION})
+    set(MACOSX_BUNDLE_COPYRIGHT "Copyright 2013. All Rights Reserved.")
+
+    # Setup the Bundle Files
+
+    add_custom_command (TARGET model PRE_BUILD
+                        COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources)
+
+    add_custom_command (TARGET model PRE_BUILD
+                        COMMAND cp -r ${CMAKE_SOURCE_DIR}/data ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/.)
+
+    add_custom_command (TARGET model PRE_BUILD
+                        COMMAND cp -r ${CMAKE_SOURCE_DIR}/shaders ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/.)
+
+    INSTALL(CODE "
+      include(BundleUtilities)
+      fixup_bundle( ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app \"\"   \"${DIRS}\")
+      " COMPONENT Runtime)
+  endmacro(OPENGLCOURSE_bundler)
+
+endif()
+
+
+#####################################################################
+# Go into exercises directory and build these
+
+if (OPENGLCOURSE_BUILD_EXAMPLES) 
+  if (NOT TARGET exercises) 
+    FILE(GLOB exercises exercises/*)
+    foreach(exercise ${exercises})
+      add_subdirectory(${exercise})
     endforeach()
   endif()
 endif()
 
-
-#####################################################################
-# Build Applications
-
-if (NOT TARGET applications)
-  FILE(GLOB applications applications/*)
-  foreach(application ${applications})
-    add_subdirectory(${application})
-  endforeach()
-endif()
