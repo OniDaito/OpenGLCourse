@@ -15,7 +15,8 @@ include_directories(
 )
 
 link_libraries( OpenGLCourse
-${Boost_LIBRARIES} )
+${Boost_LIBRARIES}
+${OPENGLCOURSE_LIBRARIES} )
 
 if (_OPENGLCOURSE_WIN32)
   SET(CMAKE_CXX_FLAGS "/MT /EHsc")
@@ -33,7 +34,9 @@ elseif(_OPENGLCOURSE_OSX)
   OPENGLCOURSE_bundler()
 
 else()
-
+   add_executable (01_Context
+       ${SOURCE_FILES} 
+   )
 
 endif()
 

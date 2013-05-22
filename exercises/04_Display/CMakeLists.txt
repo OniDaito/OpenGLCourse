@@ -34,6 +34,11 @@ elseif(_OPENGLCOURSE_OSX)
 
 else()
 
+ add_executable (04_Display
+     ${SOURCE_FILES} 
+       )
+
+
 endif()
 
 

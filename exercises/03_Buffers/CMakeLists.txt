@@ -33,6 +33,10 @@ elseif(_OPENGLCOURSE_OSX)
   OPENGLCOURSE_bundler()
 
 else()
+ add_executable (03_Buffers
+     ${SOURCE_FILES} 
+       )
+
 
 endif()
 
