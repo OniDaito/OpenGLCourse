@@ -23,6 +23,12 @@ if (_OPENGLCOURSE_WIN32)
     ${SOURCE_FILES} 
   )
 
+add_custom_command(TARGET 01_Context POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_BINARY_DIR}/../../$<CONFIGURATION>/OpenGLCourse.dll"
+        $<TARGET_FILE_DIR:01_Context>)
+
+
 elseif(_OPENGLCOURSE_OSX)
   OPENGLCOURSE_bundler()
 
