@@ -113,6 +113,34 @@ This will launch Cmake (if you have installed it) which creates the makefiles (m
 This creates the all the necessary programs and libraries.
 
 
+###Linux 64###
+
+You will need :
+
+  * CMake
+  * GCC
+  * Development libraries for gtkmm-3.0, opengl and xxf86vm
+  * Boost Shared libs installed
+
+Under linux, we build our library as a shared object with dynamic linking to the various libraries we need. Off the top of my head I cant remember them all but OpenGL, gtkmm and xxf86vm are definitely needed, along with the boost shared libraries.
+
+Under ubuntu, one can apt-get the required libraries easily enough if you find you are missing them. I have not tested under other distributions however.
+
+Once installed, navigate to the project directory and create a directory called *build*. Move inside this directory and type:
+
+  cmake ..
+
+This will launch cmake and create the makefiles you need. After that type:
+
+  make
+
+And hopefully, all the examples and libraries will build.
+
+I havent had chance to make a 32 bit version of this. In order to do so, one needs to download and build AntTweakBar and GLFW for 32 bit shared libs.
+
+
+
+
 ## Thanks ##
 
   * The London Hackspace - http://london.hackspace.org.uk
