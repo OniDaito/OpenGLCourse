@@ -76,6 +76,11 @@ The most important thing is to download a copy of boost and get it built. You ca
 
     bjam toolset=msvc-10.0 threading=multi link=static runtime-link=static release install
 
+
+When this completes run this command
+
+    bjam toolset=msvc-10.0 threading=multi link=static runtime-link=static debug install
+
 This will compile the Boost Libraries as static, so we can compile them into our final OpenGL library.
 
 Once this is done, install CMake by going to their webpage and downloading the installer. CMake is a program for generating makefiles on many platforms. It is used by OpenCV, GLFW and many other libraries common in computer graphics and vision.
