@@ -72,21 +72,40 @@ You will need:
   * CMake for Windows
   * Boost compiled for windows and installed (and in your path)
 
-The most important thing is to download a copy of boost and get it built. You can do this by downloading the zip from the boost page, unzipping and then opening your '''cmd''' command line program, going to the new boost directory and typing the following:
+The most important thing is to download a copy of boost and get it built. You can do this by downloading the zip from the boost page, unzipping and then opening your *cmd* command line program, going to the new boost directory and typing the following:
 
- bjam toolset=msvc-10.0 threading=multi link=static runtime-link=static release install
+    bjam toolset=msvc-10.0 threading=multi link=static runtime-link=static release install
 
 This will compile the Boost Libraries as static, so we can compile them into our final OpenGL library.
 
 Once this is done, install CMake by going to their webpage and downloading the installer. CMake is a program for generating makefiles on many platforms. It is used by OpenCV, GLFW and many other libraries common in computer graphics and vision.
 
-CMake has two bars at the top to fill in the path to the source code and the build path. In the top bar marked '''Where is the source code''' navigate to the OpenGLCourse directory. In the box marked '''where to build the binaries''' use the same directory but append '''/build''' to the  path.
+CMake has two bars at the top to fill in the path to the source code and the build path. In the top bar marked *Where is the source code* navigate to the OpenGLCourse directory. In the box marked *where to build the binaries* use the same directory but append */build* to the  path.
 
-You can then hit the '''configure''' button. You will be asked to '''specify the generator for this project'''. Select '''Visual Studio 10''' and '''use default native compilers'''. You will now see the options appear in the main window. Press the '''generate''' buttton and your makefiles will be generated. 
+You can then hit the *configure* button. You will be asked to *specify the generator for this project*. Select *Visual Studio 10* and *use default native compilers*. You will now see the options appear in the main window. Press the *generate* buttton and your makefiles will be generated. 
 
-If you now navigate to your '''build''' directory, you will see an OpenGLCourse project file for visual studio 10. You can now build the course in the normal manner.
+If you now navigate to your *build* directory, you will see an OpenGLCourse project file for visual studio 10. You can now build the course in the normal manner.
 
 
+### OSX ###
+
+You will need:
+  * CMake
+  * XCode tools (or Clang at the very least)
+  * Boost
+  * terminal.app or iTerm.app
+
+Under OSX, you still need cmake. Its best to use cmake from the command line. I use the wonderful program [HomeBrew](http://mxcl.github.io/homebrew/). This makes installing CMake and Boost a doddle. Under OSX, this course uses dynamic boost libraries compiled for x86_64. In addition, the programs are built as bundles (.app directories essentially) but the libraries are not copied across at present.
+
+To build the main library, make a directory called *build*. Navigate inside this directory (in the terminal or iTerm app) and type the following command
+
+    cmake ..
+
+This will launch Cmake (if you have installed it) which creates the makefiles (most likely for Clang). Once this is done (hopefully with no errors) you can type
+
+    make
+
+This creates the all the necessary programs and libraries.
 
 
 ## Thanks ##
