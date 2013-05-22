@@ -32,7 +32,8 @@ GLuint vertexLoc, colorLoc;
  */
 
 void BasicApp::init(){
-
+    link(*this);
+    
     createShader();
     createBuffers();
 
@@ -190,8 +191,6 @@ void BasicApp::display(double_t dt){
 
     glUseProgram(mProgram);
 
-    //glBindAttribLocation(mProgram,0,"aVertexPosition");
-
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -251,7 +250,7 @@ int main (int argc, const char * argv[]) {
 
     // Launch our isntance of GLFW, sending the major and minor numbers
 
-    GLFWApp a(b, 800, 600, false, argc, argv, "02_Context", 3, 2);
+    GLFWApp a(b, 800, 600, false, argc, argv, "04_Display", 3, 2);
 
     return EXIT_SUCCESS;
 

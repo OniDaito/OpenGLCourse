@@ -19,7 +19,7 @@ ${Boost_LIBRARIES} )
 
 if (_OPENGLCOURSE_WIN32)
   SET(CMAKE_CXX_FLAGS "/MT /EHsc")
-  add_executable (05_Display
+  add_executable (05_Matrices
     ${SOURCE_FILES} 
   )
 

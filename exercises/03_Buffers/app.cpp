@@ -19,13 +19,18 @@ using namespace s9::gl;
 
 namespace po = boost::program_options;
 
-unsigned int * handle = new unsigned int[3];
+unsigned int * handle = new unsigned int[2];
+
+GLuint vao[1];
+
+GLuint vertexLoc, colorLoc;
 
 /*
  * Called when the mainloop starts, just once
  */
 
 void BasicApp::init(){
+    link(*this);
 
     createShader();
     createBuffers();
@@ -57,8 +62,17 @@ void BasicApp::createShader() {
     mFS = glCreateShader(GL_FRAGMENT_SHADER);   
 
     // Read in the text
-    string sv = textFileRead("");
-    string sf = textFileRead("");
+    string sv = "#version 150\n"
+    "in vec3 aVertexPosition;\n"
+    "void main(void) {\n"
+        "gl_Position = vec4(aVertexPosition, 1.0);\n"
+    "}";
+
+    string sf = "#version 150\n"
+    "out vec4 finalColour;\n"
+    "void main(void) {\n"
+        "finalColour= vec4(0.0, 1.0, 1.0, 1.0);\n"
+    "}";
 
     const char * vv = sv.c_str();
     const char * ff = sf.c_str();
@@ -125,9 +139,11 @@ void BasicApp::createShader() {
 
 void BasicApp::createBuffers() {
 
+    // Create a set of normal, C++ style vectors or lists
+
     vector<float> verts;
+
     vector<float> colours;
-    vector<uint16_t> indices;
     
     verts += 0.0f, 0.0f, 0.0f,
         1.0, 0.0f, 0.0f, 
@@ -137,22 +153,36 @@ void BasicApp::createBuffers() {
         0.0f,0.0f,1.0f,1.0f,
         0.0f,1.0f,0.0f,1.0f;
 
-    indices += 0,1,2;
+    // Generate a Vertex Array Object
+    glGenVertexArrays(1, vao);
 
-  
-    glGenBuffers(3,handle);
+    // Bind this to the current context
+    glBindVertexArray(vao[0]);
+
+
+    // Generate 2 buffers
+    glGenBuffers(2,handle);
+
+    // Bind the buffer and fill it with data
     glBindBuffer(GL_ARRAY_BUFFER, handle[0]);
     glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(float), &verts[0], GL_STATIC_DRAW);
 
+    // Enable the vertex attribute
+    glEnableVertexAttribArray(vertexLoc);
+
+    // Enable the vertex attribute pointer for our shader
+    glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, 0, 0, 0);
+
+    CXGLERROR
+
+    // Now do the same for our colours
     glBindBuffer(GL_ARRAY_BUFFER, handle[1]);
     glBufferData(GL_ARRAY_BUFFER, colours.size() * sizeof(float), &colours[0], GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, handle[2]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint16_t), &indices[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(colorLoc);
+    glVertexAttribPointer(colorLoc, 4, GL_FLOAT, 0, 0, 0);
 
-
-
-    CXGLERROR // Handy macro for checking OpenGL Errors
+    CXGLERROR
 }
 
 
@@ -167,7 +197,6 @@ void BasicApp::display(double_t dt){
     glClearBufferfv(GL_DEPTH, 0, &depth );
 
 
-    CXGLERROR
 }
 
 /*
@@ -221,7 +250,7 @@ int main (int argc, const char * argv[]) {
 
     // Launch our isntance of GLFW, sending the major and minor numbers
 
-    GLFWApp a(b, 800, 600, false, argc, argv, "02_Context", 3, 2);
+    GLFWApp a(b, 800, 600, false, argc, argv, "03_Buffers", 3, 2);
 
     return EXIT_SUCCESS;
 

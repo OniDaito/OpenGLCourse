@@ -27,9 +27,7 @@ GLuint mProgram;
  */
 
 void BasicApp::init(){
-
-    // Load some Shaders
-
+    link(*this);
 
     // The following are variables we need
 
@@ -50,8 +48,19 @@ void BasicApp::init(){
     mFS = glCreateShader(GL_FRAGMENT_SHADER);   
 
     // Read in the text
-    string sv = textFileRead("");
-    string sf = textFileRead("");
+    string sv = "#version 150\n"
+    "in vec3 aVertexPosition;\n"
+    "void main(void) {\n"
+        "gl_Position = vec4(aVertexPosition, 1.0);\n"
+    "}";
+
+    string sf = "#version 150\n"
+    "out vec4 finalColour;\n"
+    "void main(void) {\n"
+        "finalColour= vec4(0.0, 1.0, 1.0, 1.0);\n"
+    "}";
+
+    // Convert to their C String equivalents
 
     const char * vv = sv.c_str();
     const char * ff = sf.c_str();
@@ -125,8 +134,6 @@ void BasicApp::display(double_t dt){
     glClearBufferfv(GL_DEPTH, 0, &depth );
 
 
-
-    CXGLERROR
 }
 
 /*
@@ -180,7 +187,7 @@ int main (int argc, const char * argv[]) {
 
     // Launch our isntance of GLFW, sending the major and minor numbers
 
-    GLFWApp a(b, 800, 600, false, argc, argv, "03_Buffers", 3, 2);
+    GLFWApp a(b, 800, 600, false, argc, argv, "02_Shaders", 3, 2);
 
     return EXIT_SUCCESS;
 

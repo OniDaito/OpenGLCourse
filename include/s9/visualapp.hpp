@@ -25,7 +25,7 @@ namespace s9 {
 	 * respond to these. This is a basic interface
 	 */
 
-	OPENGLCOURSEAPI class WindowResponder {
+	class OPENGLCOURSEAPI WindowResponder {
 	public:
 		virtual void processEvent(Event e) {};
 		virtual void processEvent(MouseEvent e) {};
@@ -68,7 +68,7 @@ namespace s9 {
 	 * in this case, GLFW. Sends events to the Windowed app
 	 */
 
-	OPENGLCOURSEAPI class WindowSystem {
+	class OPENGLCOURSEAPI WindowSystem {
 	public:
 		WindowSystem(WindowApp& app) : _app(app) { };
 

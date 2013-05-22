@@ -25,7 +25,7 @@ namespace po = boost::program_options;
  */
 
 void BasicApp::init(){
-  
+    link(*this);
 }
 
 

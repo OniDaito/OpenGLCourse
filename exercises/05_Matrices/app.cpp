@@ -19,16 +19,36 @@ using namespace s9::gl;
 
 namespace po = boost::program_options;
 
-unsigned int * handle = new unsigned int[3];
+unsigned int * handle = new unsigned int[2];
+
+GLuint vao[1];
+
+GLuint mProgram;
+
+GLuint vertexLoc, colorLoc;
+
+// Locations of our two matrices within the shader
+GLuint projMatrixLoc, viewMatrixLoc;
+
+
+// Our Actual Matrices
+
+glm::mat4 projMatrix;
+glm::mat4 viewMatrix;
+
 
 /*
  * Called when the mainloop starts, just once
  */
 
 void BasicApp::init(){
+    link(*this);
 
     createShader();
     createBuffers();
+
+    projMatrix = glm::perspective(55.0, 4.0/3.0, 0.1, 100.0);
+    viewMatrix = glm::lookAt(glm::vec3(0,0,5.0), glm::vec3(0.0,0.0,0.0), glm::vec3(0,1.0,0.0));
 
 }
 
@@ -41,8 +61,7 @@ void BasicApp::createShader() {
     // The following are variables we need
 
     GLuint mVS, mFS;
-    GLuint mProgram;
-
+    
     int isCompiled_VS, isCompiled_FS;
     
     int maxLength;
@@ -58,34 +77,20 @@ void BasicApp::createShader() {
 
     // Read in the shaders
 
-    string sv = "#version 320"
-        "precision highp float;"
+    // We alter this shader to contain some useful matrices
 
-        "out vec4 vVertexPosition;"
-        "out vec4 vColour;"
+    string sv = "#version 150\n"
+    "in vec3 aVertexPosition;\n"
+    "uniform mat4 viewMatrix, projMatrix;\n"
+    "void main(void) {\n"
+        "gl_Position = projMatrix * viewMatrix * vec4(aVertexPosition, 1.0);\n"
+    "}";
 
-        "layout (location = 0) in vec3 attribVertPosition;" 
-        "layout (location = 1) in vec3 attribVertNormal;"
-        "layout (location = 2) in vec4 attribVertColour;"
-        "layout (location = 3) in vec2 attribVertTexCoord;"
-
-        "uniform mat4 uMVPMatrix;"
-
-        "void main() {"            
-          "vVertexPosition = vec4(attribVertPosition,1.0);"
-          "gl_Position = uMVPMatrix * vVertexPosition;"
-          "vColour = attribVertColour;"
-        "}";
-
-    string sf = "#version 320"
-        "precision highp float;"
-        "in vec4 vVertexPosition;"
-        "in vec4 vColour;"
-        "out vec4 fragColor;"
-
-        "void main() {"
-            "fragColor = vColour;"
-        "}";
+    string sf = "#version 150\n"
+    "out vec4 finalColour;\n"
+    "void main(void) {\n"
+        "finalColour= vec4(0.0, 1.0, 1.0, 1.0);\n"
+    "}";
 
     const char * vv = sv.c_str();
     const char * ff = sf.c_str();
@@ -144,6 +149,13 @@ void BasicApp::createShader() {
         delete []  shaderProgramInfoLog;
         return;
     }
+
+
+    vertexLoc = glGetAttribLocation(mProgram,"aVertexPosition");
+
+    // Grab our locations
+    projMatrixLoc = glGetUniformLocation(mProgram, "projMatrix");
+    viewMatrixLoc = glGetUniformLocation(mProgram, "viewMatrix");
 }
 
 /*
@@ -153,8 +165,8 @@ void BasicApp::createShader() {
 void BasicApp::createBuffers() {
 
     vector<float> verts;
+
     vector<float> colours;
-    vector<uint16_t> indices;
     
     verts += 0.0f, 0.0f, 0.0f,
         1.0, 0.0f, 0.0f, 
@@ -164,19 +176,24 @@ void BasicApp::createBuffers() {
         0.0f,0.0f,1.0f,1.0f,
         0.0f,1.0f,0.0f,1.0f;
 
-    indices += 0,1,2;
+    glGenVertexArrays(1, vao);
 
+    glBindVertexArray(vao[0]);
   
-    glGenBuffers(3,handle);
+    glGenBuffers(2,handle);
     glBindBuffer(GL_ARRAY_BUFFER, handle[0]);
     glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(float), &verts[0], GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(vertexLoc);
+    glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, 0, 0, 0);
+
+    CXGLERROR
 
     glBindBuffer(GL_ARRAY_BUFFER, handle[1]);
     glBufferData(GL_ARRAY_BUFFER, colours.size() * sizeof(float), &colours[0], GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, handle[2]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint16_t), &indices[0], GL_STATIC_DRAW);
-
+    glEnableVertexAttribArray(colorLoc);
+    glVertexAttribPointer(colorLoc, 4, GL_FLOAT, 0, 0, 0);
 
     CXGLERROR // Handy macro for checking OpenGL Errors
 }
@@ -192,10 +209,17 @@ void BasicApp::display(double_t dt){
     GLfloat depth = 1.0f;
     glClearBufferfv(GL_DEPTH, 0, &depth );
 
+    glUseProgram(mProgram);
 
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    glUniformMatrix4fv(projMatrixLoc, 1, GL_FALSE, glm::value_ptr(projMatrix));
+    glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 
-    
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glUseProgram(0);
+
+
 }
 
 /*
@@ -213,7 +237,7 @@ void BasicApp::processEvent(MouseEvent e){
 void BasicApp::processEvent(ResizeEvent e){
     cout << "Window Resized:" << e.mW << "," << e.mH << endl;
 
-   
+    glViewport(0,0,e.mW,e.mH);
 }
 
 void BasicApp::processEvent(KeyboardEvent e){
@@ -249,7 +273,7 @@ int main (int argc, const char * argv[]) {
 
     // Launch our isntance of GLFW, sending the major and minor numbers
 
-    GLFWApp a(b, 800, 600, false, argc, argv, "02_Context", 3, 2);
+    GLFWApp a(b, 800, 600, false, argc, argv, "05_Matrices", 3, 2);
 
     return EXIT_SUCCESS;
 
