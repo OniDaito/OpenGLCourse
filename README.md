@@ -62,6 +62,32 @@ The 5 parts are as follows:
 
 This couse assumes a good knowledge of C++ and programming in whatever OS you tend to use. It is, however, not too heavy going and a lot of code is given to you. This couse will take you through creating a context, clearing a screen, preparing buffers and shaders, then combining them all together to create something on the screen.
 
+## Installation ##
+
+### Windows ###
+
+You will need:
+
+  * Visual Studio 2010 with Service Pack 1
+  * CMake for Windows
+  * Boost compiled for windows and installed (and in your path)
+
+The most important thing is to download a copy of boost and get it built. You can do this by downloading the zip from the boost page, unzipping and then opening your '''cmd''' command line program, going to the new boost directory and typing the following:
+
+ bjam toolset=msvc-10.0 threading=multi link=static runtime-link=static release install
+
+This will compile the Boost Libraries as static, so we can compile them into our final OpenGL library.
+
+Once this is done, install CMake by going to their webpage and downloading the installer. CMake is a program for generating makefiles on many platforms. It is used by OpenCV, GLFW and many other libraries common in computer graphics and vision.
+
+CMake has two bars at the top to fill in the path to the source code and the build path. In the top bar marked '''Where is the source code''' navigate to the OpenGLCourse directory. In the box marked '''where to build the binaries''' use the same directory but append '''/build''' to the  path.
+
+You can then hit the '''configure''' button. You will be asked to '''specify the generator for this project'''. Select '''Visual Studio 10''' and '''use default native compilers'''. You will now see the options appear in the main window. Press the '''generate''' buttton and your makefiles will be generated. 
+
+If you now navigate to your '''build''' directory, you will see an OpenGLCourse project file for visual studio 10. You can now build the course in the normal manner.
+
+
+
 
 ## Thanks ##
 
