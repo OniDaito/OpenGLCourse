@@ -128,11 +128,11 @@ Under ubuntu, one can apt-get the required libraries easily enough if you find y
 
 Once installed, navigate to the project directory and create a directory called *build*. Move inside this directory and type:
 
-  cmake ..
+    cmake ..
 
 This will launch cmake and create the makefiles you need. After that type:
 
-  make
+    make
 
 And hopefully, all the examples and libraries will build.
 
