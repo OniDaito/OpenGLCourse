@@ -343,14 +343,15 @@ if (_OPENGLCOURSE_OSX)
 
     # Setup the Bundle Files
 
-    add_custom_command (TARGET model PRE_BUILD
-                        COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources)
+    #add_custom_command (TARGET ${PROJECT_NAME} PRE_BUILD
+    #                    COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources)
 
-    add_custom_command (TARGET model PRE_BUILD
-                        COMMAND cp -r ${CMAKE_SOURCE_DIR}/data ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/.)
+  
+    #add_custom_command (TARGET ${PROJECT_NAME} PRE_BUILD
+    #                    COMMAND cp -r ${CMAKE_SOURCE_DIR}/shaders ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/.)
 
-    add_custom_command (TARGET model PRE_BUILD
-                        COMMAND cp -r ${CMAKE_SOURCE_DIR}/shaders ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/.)
+    add_custom_command (TARGET ${PROJECT_NAME} PRE_BUILD
+                        COMMAND cp ${CMAKE_SOURCE_DIR}/lib/osx/* ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/.)
 
     INSTALL(CODE "
       include(BundleUtilities)
