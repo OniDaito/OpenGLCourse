@@ -103,12 +103,25 @@ void GLFWApp::_display(){
   TwDraw();
 }
 
+
+/*
+ * GLFW Callback for the keyboard
+ */
+
+void GLFWApp::_scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+	ScrollEvent e (xoffset,yoffset,glfwGetTime());
+	pThis->_app.fireEvent(e);
+
+}
+
+
+
 /*
  * GLFW Callback for the keyboard
  */
 
 
-void GLFWApp::_keyCallback(GLFWwindow* window, int key, int action) {
+void GLFWApp::_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	KeyboardEvent e (key,action,glfwGetTime());
 	pThis->_app.fireEvent(e);
 }
@@ -117,7 +130,7 @@ void GLFWApp::_keyCallback(GLFWwindow* window, int key, int action) {
  * GLFW Mouse button callback - sends a full event with current position as well
  */
 
-void GLFWApp::_mouseButtonCallback(GLFWwindow* window, int button, int action) {
+void GLFWApp::_mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
 	if (!TwEventMouseButtonGLFW(button,action)){
 		switch(button){
 			case 0: {
@@ -243,7 +256,7 @@ void GLFWApp::_error_callback(int error, const char* description) {
  */
 
  void GLFWApp::initGL( const int w = 800, const int h =600,
- 		const int major = 3, const int minor = 1, const int depthbits = 16) {
+ 		const int major = 4, const int minor = 1, const int depthbits = 16) {
 
 
 	///\todo fully switch to core profile - there is something causing an error in core
@@ -309,6 +322,8 @@ void GLFWApp::_error_callback(int error, const char* description) {
 	TwWindowSize(w, h);
 
 	pThis->_app.init();
+
+	pThis->_dt = 0.0;
 
 	// fire a cheeky resize event to make sure all is well
 	ResizeEvent e (w,h,glfwGetTime());

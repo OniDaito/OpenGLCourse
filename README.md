@@ -122,9 +122,18 @@ You will need :
   * Development libraries for gtkmm-3.0, opengl and xxf86vm
   * Boost Shared libs installed
 
-Under linux, we build our library as a shared object with dynamic linking to the various libraries we need. Off the top of my head I cant remember them all but OpenGL, gtkmm and xxf86vm are definitely needed, along with the boost shared libraries.
+Under linux, we build our library as a shared object with dynamic linking to the various libraries we need
+Extra libraries needed include:
+  
+  * glew-utils
+  * libgtk-3-dev
+  * libgtkmm-3.0-dev
+  * xorg-dev
+  * libglu1-mesa-dev
+  * xxf86vm
 
 Under ubuntu, one can apt-get the required libraries easily enough if you find you are missing them. I have not tested under other distributions however.
+
 
 Once installed, navigate to the project directory and create a directory called *build*. Move inside this directory and type:
 
@@ -137,8 +146,6 @@ This will launch cmake and create the makefiles you need. After that type:
 And hopefully, all the examples and libraries will build.
 
 I havent had chance to make a 32 bit version of this. In order to do so, one needs to download and build AntTweakBar and GLFW for 32 bit shared libs.
-
-
 
 
 ## Thanks ##

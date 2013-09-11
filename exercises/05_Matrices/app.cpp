@@ -273,7 +273,7 @@ int main (int argc, const char * argv[]) {
 
     // Launch our isntance of GLFW, sending the major and minor numbers
 
-    GLFWApp a(b, 800, 600, false, argc, argv, "05_Matrices", 3, 2);
+    GLFWApp a(b, 800, 600, false, argc, argv, "05_Matrices", 4, 1);
 
     return EXIT_SUCCESS;
 

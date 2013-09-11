@@ -14,7 +14,7 @@
 #include "../visualapp.hpp"
 #include "utils.hpp"
 
-#include <GL/glfw3.h>
+#include <GLFW/glfw3.h>
 #include <anttweakbar/AntTweakBar.h>
 
 #ifdef _OPENGLCOURSE_X11_GLX	
@@ -27,7 +27,7 @@ namespace s9 {
 
 	namespace gl {
 
-		/*
+		/**
 		 * A static wrapper around a C++ style class for GLFW - delgates to app class
 		 * Calls GLEW to setup the context
 		 * Considered a template but the static, C-Like nature of GLFW made this more annoying
@@ -60,9 +60,11 @@ namespace s9 {
   
       static void _display();
 
-			static void _keyCallback(GLFWwindow* window, int key, int action);
+			static void _keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-			static void _mouseButtonCallback(GLFWwindow* window, int button, int action);
+			static void _mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+
+			static void _scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 
 			static void _window_close_callback(GLFWwindow* window);
 

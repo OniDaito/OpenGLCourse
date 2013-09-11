@@ -4,8 +4,8 @@
 cmake_minimum_required (VERSION 2.8) 
 project (OpenGLCourse) 
 
-set(OPENGLCOURSE_VERSION_MAJOR "0")
-set(OPENGLCOURSE_VERSION_MINOR "2")
+set(OPENGLCOURSE_VERSION_MAJOR "1")
+set(OPENGLCOURSE_VERSION_MINOR "1")
 set(OPENGLCOURSE_VERSION_PATCH "0")
 set(OPENGLCOURSE_VERSION_EXTRA "")
 set(OPENGLCOURSE_VERSION "${OPENGLCOURSE_VERSION_MAJOR}.${OPENGLCOURSE_VERSION_MINOR}")
@@ -144,17 +144,17 @@ if (_OPENGLCOURSE_LINUX)
 
   OPENGLCOURSE_find_pkgconfig_lib(gtkmm-3.0)
   OPENGLCOURSE_find_pkgconfig_lib(gl)
-  OPENGLCOURSE_find_pkgconfig_lib(xxf86vm)
-
- 
   OPENGLCOURSE_find_library(glfw)
   OPENGLCOURSE_find_library(AntTweakBar)
+  OPENGLCOURSE_find_pkgconfig_lib(xxf86vm)
+  OPENGLCOURSE_find_pkgconfig_lib(xrandr)
+  OPENGLCOURSE_find_pkgconfig_lib(xi)
 
   include_directories(${PROJECT_SOURCE_DIR}/lib/linux
     ${OPENGLCOURSE_INCLUDES}
   )
 
-  SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lXi")
+  SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lXi -lXrandr -lXxf86vm")
 
 elseif(_OPENGLCOURSE_OSX)
 
